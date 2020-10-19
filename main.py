@@ -4,5 +4,5 @@ from distances import importDistances
 from packages import importPackages
 
 
-# importDistances.importFile()
-importPackages.importFile()
+importDistances.importFile()
+# importPackages.importFile()

@@ -11,17 +11,19 @@ class PackagesHashMap:
 
     def __setitem__(self, key, value):
         keyHash = self.getHash(key)
-        keyValue = value
         if self.map[keyHash] is None:
-            self.map[keyHash] = list([keyValue])
+            self.map[keyHash] = list([value])
             return True
         else:
-            self.map[keyHash].append(keyValue)
+            self.map[keyHash].append(value)
             return True
 
     def __getitem__(self, key):
         keyHash = self.getHash(key)
         return self.map[keyHash][0]
+
+    def __iter__(self):
+        return self, next()
 
     def printPackagesHash(self, key):
         for item in self.map[key]:

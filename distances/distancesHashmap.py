@@ -15,33 +15,22 @@ class DistancesHashMap:
         hash = key
         return hash
 
-    def addDistance(self, key, value):
+    def __setitem__(self, key, address,  value):
         keyHash = self.getHash(key)
-        keyValue = [key, value]
 
         if self.map[keyHash] is None:
-            self.map[keyHash] = list([keyValue])
+            self.map[keyHash] = list([key, address, [value]])
+            self.map[keyHash][2] = []
             return True
         else:
-            self.map[keyHash].append(keyValue)
+            self.map[keyHash][2].append(value)
             return True
 
-    def getDistance(self, key):
-        keyHash = self.getHash(key)
+    def __getitem__(self, item):
+        keyHash = self.getHash(item)
         if self.map[keyHash] is not None:
-            for pair in self.map[keyHash]:
-                if pair[0] == key:
-                    return pair[1]
+            return self.map[item]
         return None
-
-    def deleteDistance(self, key):
-        keyHash = self.getHash(key)
-        if self.map[keyHash] is None:
-            return False
-        for i in range(0, len(self.map[keyHash])):
-            if self.map[keyHash][i][0] == key:
-                self.map[keyHash].pop(i)
-                return True
 
     def printDistancesHash(self):
         for item in self.map:
