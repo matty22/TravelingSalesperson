@@ -21,16 +21,17 @@ class PackagesHashMap:
 
     def __getitem__(self, key):
         keyHash = self.getHash(key)
-        return self.map[keyHash]
+        return self.map[keyHash][0]
 
     def printPackagesHash(self, key):
         for item in self.map[key]:
             if item is not None:
-                print(item.getId())
-                print(item.getAddress())
-                print(item.getDeadline())
-                print(item.getCity())
-                print(item.getZip())
-                print(item.getMass())
-                print(item.getStatus())
+                print("ID: " + item.getId())
+                print("Address: " + item.getAddress())
+                print("City: " + item.getCity())
+                print("State: " + item.getState())
+                print("Zip: " + item.getZip())
+                print("Deadline: " + item.getDeadline())
+                print("Mass: " + item.getMass())
+                print("Status: " + item.getStatus())
 

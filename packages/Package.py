@@ -1,11 +1,12 @@
 
 class Package:
-    def __init__(self, id, address, deadline, city, zip, mass, status):
+    def __init__(self, id, address, city, state, zip, deadline, mass, status):
         self.id = id
         self.address = address
-        self.deadline = deadline
         self.city = city
+        self.state = state
         self.zip = zip
+        self.deadline = deadline
         self.mass = mass
         self.status = status
 
@@ -15,11 +16,14 @@ class Package:
     def getAddress(self):
         return self.address
 
-    def getDeadline(self):
-        return self.deadline
-
     def getCity(self):
         return self.city
+
+    def getState(self):
+        return self.state
+
+    def getDeadline(self):
+        return self.deadline
 
     def getZip(self):
         return self.zip
