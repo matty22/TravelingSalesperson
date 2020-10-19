@@ -18,7 +18,7 @@ C. Write original code to solve and to meet the requirements of lowest mileage u
 D. Identify a data structure that can be used with your chosen algorithm to store the package data.    
 1. Explain how your data structure includes the relationship between the data points you are storing.    
 
-E. Develop a hash table, without using any additional libraries or classes, with an insertion function that takes the following components as input and inserts the components into the hash table:    
+~E. Develop a hash table, without using any additional libraries or classes, with an insertion function that takes the following components as input and inserts the components into the hash table:~    
 * ~package ID number~    
 * ~delivery address~    
 * ~delivery deadline~    
@@ -27,14 +27,14 @@ E. Develop a hash table, without using any additional libraries or classes, with
 * ~package weight~    
 * ~delivery status (e.g., delivered, in route)~
 
-F. Develop a look-up function that takes the following components as input and returns the corresponding data elements:    
-* package ID number    
-* delivery address    
-* delivery deadline    
-* delivery city    
-* delivery zip code    
-* package weight    
-* delivery status (e.g., delivered, in route)    
+~F. Develop a look-up function that takes the following components as input and returns the corresponding data elements:~    
+* ~package ID number~    
+* ~delivery address~    
+* ~delivery deadline~    
+* ~delivery city~    
+* ~delivery zip code~    
+* ~package weight~    
+* ~delivery status (e.g., delivered, in route)~    
 
 G. Provide an interface for the insert and look-up functions to view the status of any package at any time. This function should return all information about each package, including delivery status.    
 1. Provide screenshots to show package status of all packages at a time between 8:35 a.m. and 9:25 a.m.    
