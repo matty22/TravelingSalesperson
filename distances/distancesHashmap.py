@@ -11,6 +11,9 @@ class DistancesHashMap:
         else:
             return int(string)
 
+    def __len__(self):
+        return 28
+
     def getHash(self, key):
         hash = key
         return hash
@@ -31,6 +34,16 @@ class DistancesHashMap:
         if self.map[keyHash] is not None:
             return self.map[item]
         return None
+
+    def __iter__(self):
+        self.num = 0
+        return self
+
+    def next(self):
+        if self.num >= self.size:
+            raise StopIteration
+        self.num += 1
+        return self.num
 
     def printDistancesHash(self):
         for item in self.map:

@@ -11,7 +11,7 @@ class Package:
         self.status = status
 
     def getId(self):
-        return self.id
+        return int(self.id)
 
     def getAddress(self):
         return self.address

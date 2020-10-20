@@ -13,5 +13,4 @@ def importFile():
         for rowIndex, row in enumerate(readCSV):
             for cellIndex, cell in enumerate(row):
                 distancesHashmap.__setitem__(rowIndex + 1, row[0], cell)
-        distancesHashmap.printDistancesHash()
-
+    return distancesHashmap
