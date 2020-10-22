@@ -48,7 +48,7 @@ def getCurrentLocationId(address):
         if index > 0:
             if address == distances[index][1]:
                 currentLocationId = distances[index][0]
-                return int(currentLocationId - 1)
+                return int(currentLocationId)
 
 
 # Take address number as a string and return the id of that destination address
@@ -70,31 +70,31 @@ def getDestinationId(address):
 # TODO: the thing works unless I add packages[38] to this truck
 testTruck = [packages[3], packages[18], packages[36], packages[38]]
 def distanceToDestination(location, destination):
-    return float(distances[destination][2][location])
+    return float(distances.__getitem__(location)[2][destination-1])
 
 # TODO: account for packages with the same destination
 # Start nearest neighbor algorithm
 # Space complexity:
 # Time complexity:
-currentLocation = getCurrentLocationId('4001')          # Get current location id at hub
+
 truckTotalDistance = 0
-def findNearestNeighbor(truck, currentLocation, nearestNeighbor, truckTotalDistance):
+previousDistance = 100
+def findNearestNeighbor(truck, currentLocation, previousDistance, truckTotalDistance):
     if len(truck) > 0:
+        packageToRemove = 0
         for package in truck: # {
-            currentNearestNeighborDist = nearestNeighbor
-            destination = getDestinationId(package.getAddress())    # Get destination id
-            distanceToDest = distanceToDestination(currentLocation, destination)    # Calculate distance from location to destination
-            if distanceToDest < currentNearestNeighborDist:          # Determine if current package is nearest neighbor
-                currentNearestNeighborDist = distanceToDest
-                currentLocation = getCurrentLocationId(package.getAddress())
-            truckTotalDistance += currentNearestNeighborDist
-        # }
-            print("Remove package: " + str(package.getId()))
-            truck.remove(package)
-            print("Total distance covered by truck: " + str(truckTotalDistance))
-        findNearestNeighbor(truck, currentLocation, currentNearestNeighborDist, truckTotalDistance)
+            destination = getDestinationId(package.getAddress())
+            distanceToDest = distanceToDestination(currentLocation, destination)
+            if distanceToDest < previousDistance:
+                previousDistance = distanceToDest
+                packageToRemove = package
+    truckTotalDistance += previousDistance
+    print("Deliver package: " + str(packageToRemove.getId()))
+    print(truckTotalDistance)
+    truck.remove(packageToRemove)
+    currentLocation = getCurrentLocationId(packageToRemove.getAddress())
+    if len(truck) > 0:
+        findNearestNeighbor(truck2, currentLocation, 100, truckTotalDistance)
 
-
-
-
-findNearestNeighbor(testTruck, currentLocation, 100.0, truckTotalDistance)
+# Start truck 2 at hub
+findNearestNeighbor(truck2, 1, previousDistance, truckTotalDistance)
