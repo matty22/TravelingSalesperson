@@ -1,3 +1,4 @@
+import re
 
 class Package:
     def __init__(self, id, address, city, state, zip, deadline, mass, status):
@@ -14,7 +15,9 @@ class Package:
         return int(self.id)
 
     def getAddress(self):
-        return self.address
+        regex = re.compile('(^[^\s]+)')
+        addressNumber = regex.match(self.address).group()
+        return addressNumber
 
     def getCity(self):
         return self.city
