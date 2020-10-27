@@ -27,8 +27,10 @@ class PackagesHashMap:
         del self.map[keyHash][0]
 
     def __iter__(self):
-        listIter = iter(self.map)
-        return self, next(listIter)
+        return iter(self.map)
+
+    def next(self):
+        return next()
 
     def printPackage(self, key):
         if not self.map[key]:
@@ -37,6 +39,7 @@ class PackagesHashMap:
         for item in self.map[key]:
             if item.getId() == key:
                 if item is not None:
+                    print("\n***********************************")
                     print("ID: " + str(item.getId()))
                     print("Address: " + item.getAddress())
                     print("City: " + item.getCity())
@@ -45,3 +48,13 @@ class PackagesHashMap:
                     print("Deadline: " + item.getDeadline())
                     print("Mass: " + item.getMass())
                     print("Status: " + item.getStatus())
+                    print("***********************************\n")
+
+    def printAllPackages(self):
+        print("\n*************************************************************************************")
+        print('{0:20}{1:20}{2}'.format("PACKAGE ID", "DEADLINE", "CURRENT STATUS"))
+        print("*************************************************************************************")
+        for item in self.map:
+            if item is not None:
+                print('{0:20}{1:20}{2}'.format(str(item[0].getId()), str(item[0].getDeadline()), str(item[0].getStatus())))
+        print("*************************************************************************************\n")

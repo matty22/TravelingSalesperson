@@ -36,3 +36,6 @@ class Package:
 
     def getStatus(self):
         return self.status
+
+    def setStatus(self, status):
+        self.status = status

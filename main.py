@@ -2,6 +2,9 @@
 
 from distances import importDistances
 from packages import importPackages
+from datetime import datetime, timedelta
+import time
+
 
 # Import data from the distance and package CSV files
 # Space complexity:
@@ -12,33 +15,17 @@ packages = importPackages.importFile()
 
 # Initialize and load trucks
 # --------------------------
-
-# Truck 1 waits for new address for package 9 and leaves at 10:20
-# Space complexity:
-# Time complexity:
 truck1 = [packages[9], packages[2], packages[4], packages[5], packages[7], packages[8],
           packages[10], packages[11], packages[12], packages[17], packages[21], packages[22],
           packages[23], packages[24], packages[26], packages[27]]
 
-# Truck 2 is first truck to leave in the morning and
-# returns to hub before 10:20 so driver can take truck 1
-# Space complexity:
-# Time complexity:
 truck2 = [packages[3], packages[18], packages[36], packages[38], packages[15],
           packages[14], packages[13], packages[16], packages[19], packages[20]]
 
-# Truck 3 will leave at 9:05 when delayed packages arrive
-# Space complexity:
-# Time complexity:
 truck3 = [packages[6], packages[25], packages[28], packages[32], packages[1], packages[29],
           packages[30], packages[31], packages[34], packages[37], packages[40], packages[33],
           packages[35], packages[39]]
 
-
-
-
-# Helper Methods
-# --------------
 
 # Take address number as a string, and return the id of the current location address
 # Space complexity:
@@ -66,35 +53,90 @@ def getDestinationId(address):
 # current location to destination
 # Space complexity:
 # Time complexity:
-
-# TODO: the thing works unless I add packages[38] to this truck
-testTruck = [packages[3], packages[18], packages[36], packages[38]]
 def distanceToDestination(location, destination):
     return float(distances.__getitem__(location)[2][destination-1])
 
-# TODO: account for packages with the same destination
+
+def deliverPackageTime(startTime, distanceTraveled):
+    strTime = datetime.strptime(startTime, "%I:%M")
+    minutesTaken = distanceTraveled / .3
+    strTime += timedelta(minutes=minutesTaken)
+    return datetime.strftime(strTime, "%I:%M:%S")
+
+
+
+
 # Start nearest neighbor algorithm
 # Space complexity:
 # Time complexity:
-
+totalDistanceForAllTrucks = 0
 truckTotalDistance = 0
 previousDistance = 100
-def findNearestNeighbor(truck, currentLocation, previousDistance, truckTotalDistance):
+def findNearestNeighbor(truck, startTime, currentLocation, previousDistance, truckTotalDistance):
     if len(truck) > 0:
         packageToRemove = 0
-        for package in truck: # {
+        for package in truck:
             destination = getDestinationId(package.getAddress())
             distanceToDest = distanceToDestination(currentLocation, destination)
             if distanceToDest < previousDistance:
                 previousDistance = distanceToDest
                 packageToRemove = package
     truckTotalDistance += previousDistance
-    print("Deliver package: " + str(packageToRemove.getId()))
-    print(truckTotalDistance)
+    timeDelivered = deliverPackageTime(startTime, truckTotalDistance)
+    packageToRemove.setStatus("Delivered at: " + str(timeDelivered))
     truck.remove(packageToRemove)
     currentLocation = getCurrentLocationId(packageToRemove.getAddress())
-    if len(truck) > 0:
-        findNearestNeighbor(truck2, currentLocation, 100, truckTotalDistance)
 
-# Start truck 2 at hub
-findNearestNeighbor(truck2, 1, previousDistance, truckTotalDistance)
+    if len(truck) > 0:
+        findNearestNeighbor(truck, startTime, currentLocation, 100, truckTotalDistance)
+
+
+def searchByTime(time):
+    tempArray = packages
+    searchTime = datetime.strptime(time, "%H:%M")
+    i = 1
+    print("\n*************************************************************************************")
+    print('{0:20}{1:20}{2}'.format("PACKAGE ID", "DEADLINE", "CURRENT STATUS"))
+    print("*************************************************************************************")
+    while i < 41:
+        substring = packages[i].getStatus()[-8:]
+        deliveryTime = datetime.strptime(substring, "%H:%M:%S")
+        if deliveryTime < searchTime:
+            currentStatus = datetime.strftime(deliveryTime, "%I:%M:%S")
+            tempArray[i].setStatus("Delivered at: " + currentStatus)
+        else:
+            tempArray[i].setStatus("Not Delivered")
+        print('{0:20}{1:20}{2}'.format(str(tempArray[i].getId()), str(tempArray[i].getDeadline()), str(tempArray[i].getStatus())))
+        i += 1
+    print("*************************************************************************************\n")
+
+
+# Begin simulation
+
+# Truck 2 will leave  at 8:00 and returns to hub before 10:20 so driver can take truck 1
+findNearestNeighbor(truck2, "8:00", 1, previousDistance, truckTotalDistance) # Truck2 = 31.3 miles
+
+# Truck 3 will leave at 9:05 when delayed packages arrive
+findNearestNeighbor(truck3, "9:05", 1, previousDistance, truckTotalDistance) # Truck3 = 27.4 miles
+
+# Truck 1 waits for new address for package 9 and leaves at 10:20
+findNearestNeighbor(truck1, "10:20", 1, previousDistance, truckTotalDistance) # Truck1 = 44.3 miles
+deliverPackageTime("08:00", 22)
+print("\n\n*********************************")
+print("WGUPS Package Delivery Simulation")
+print("*********************************")
+print("Choose an option:")
+print("1 - Print all packages status")
+print("2 - Search for package by package ID")
+print("3 - Print packages status at a given time")
+beginSim = raw_input("Enter your choice:")
+if beginSim == "1":
+    packages.printAllPackages()
+elif beginSim == "2":
+    packageID = input("Input id of package you would like to see:")
+    packages.printPackage(packageID)
+elif beginSim == "3":
+    enteredTime = raw_input("Enter the time you'd like to see in 24 hour format (XX:XX): ")
+    searchByTime(enteredTime)
+else:
+    print("you entered an invalid value")
