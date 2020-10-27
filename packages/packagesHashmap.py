@@ -58,3 +58,4 @@ class PackagesHashMap:
             if item is not None:
                 print('{0:20}{1:20}{2}'.format(str(item[0].getId()), str(item[0].getDeadline()), str(item[0].getStatus())))
         print("*************************************************************************************\n")
+

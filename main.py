@@ -3,7 +3,7 @@
 from distances import importDistances
 from packages import importPackages
 from datetime import datetime, timedelta
-import time
+
 
 
 # Import data from the distance and package CSV files
@@ -19,12 +19,11 @@ truck1 = [packages[9], packages[2], packages[4], packages[5], packages[7], packa
           packages[10], packages[11], packages[12], packages[17], packages[21], packages[22],
           packages[23], packages[24], packages[26], packages[27]]
 
-truck2 = [packages[3], packages[18], packages[36], packages[38], packages[15],
-          packages[14], packages[13], packages[16], packages[19], packages[20]]
+truck2 = [packages[3], packages[18], packages[36], packages[38], packages[15], packages[37],
+          packages[14], packages[13], packages[16], packages[19], packages[20], packages[30]]
 
 truck3 = [packages[6], packages[25], packages[28], packages[32], packages[1], packages[29],
-          packages[30], packages[31], packages[34], packages[37], packages[40], packages[33],
-          packages[35], packages[39]]
+          packages[31], packages[34], packages[40], packages[33], packages[35], packages[39]]
 
 
 # Take address number as a string, and return the id of the current location address
@@ -73,6 +72,8 @@ totalDistanceForAllTrucks = 0
 truckTotalDistance = 0
 previousDistance = 100
 def findNearestNeighbor(truck, startTime, currentLocation, previousDistance, truckTotalDistance):
+    global totalDistanceForAllTrucks
+    isTruck2 = truck == truck2
     if len(truck) > 0:
         packageToRemove = 0
         for package in truck:
@@ -87,8 +88,15 @@ def findNearestNeighbor(truck, startTime, currentLocation, previousDistance, tru
     truck.remove(packageToRemove)
     currentLocation = getCurrentLocationId(packageToRemove.getAddress())
 
+    # From the last package delivery location for Truck2 return to the depot to swap trucks
+    if len(truck) == 1 and isTruck2:
+        distanceToHub = distanceToDestination(currentLocation, 1)
+        totalDistanceForAllTrucks += distanceToHub
+
     if len(truck) > 0:
         findNearestNeighbor(truck, startTime, currentLocation, 100, truckTotalDistance)
+    else:
+        totalDistanceForAllTrucks += truckTotalDistance
 
 
 def searchByTime(time):
@@ -110,9 +118,7 @@ def searchByTime(time):
         i += 1
     print("*************************************************************************************\n")
 
-
-# Begin simulation
-
+#Deliver Packages
 # Truck 2 will leave  at 8:00 and returns to hub before 10:20 so driver can take truck 1
 findNearestNeighbor(truck2, "8:00", 1, previousDistance, truckTotalDistance) # Truck2 = 31.3 miles
 
@@ -121,7 +127,8 @@ findNearestNeighbor(truck3, "9:05", 1, previousDistance, truckTotalDistance) # T
 
 # Truck 1 waits for new address for package 9 and leaves at 10:20
 findNearestNeighbor(truck1, "10:20", 1, previousDistance, truckTotalDistance) # Truck1 = 44.3 miles
-deliverPackageTime("08:00", 22)
+
+# Begin simulation
 print("\n\n*********************************")
 print("WGUPS Package Delivery Simulation")
 print("*********************************")
@@ -129,6 +136,7 @@ print("Choose an option:")
 print("1 - Print all packages status")
 print("2 - Search for package by package ID")
 print("3 - Print packages status at a given time")
+print("4 - Print total distance traveled for all trucks")
 beginSim = raw_input("Enter your choice:")
 if beginSim == "1":
     packages.printAllPackages()
@@ -138,5 +146,7 @@ elif beginSim == "2":
 elif beginSim == "3":
     enteredTime = raw_input("Enter the time you'd like to see in 24 hour format (XX:XX): ")
     searchByTime(enteredTime)
+elif beginSim == "4":
+    print("Total distance traveled by all trucks is " + str(totalDistanceForAllTrucks))
 else:
     print("you entered an invalid value")
