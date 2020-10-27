@@ -5,9 +5,14 @@ from packages import packagesHashmap as HM
 from Package import Package
 
 # Initialize package hashmap
+# See space and time complexity in hashmap definition file
+# --------------------------
 packagesHashmap = HM.PackagesHashMap()
 
-# Import data from CSV and insert into hashmap
+# Import data from CSV and insert Package objects into hashmap
+# Space complexity: O(n)
+# Time complexity: O(n)
+# --------------------------
 def importFile():
     with io.open('packages/WGUPS Package File.csv', encoding='utf-8-sig') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
